@@ -7,7 +7,7 @@ class GetRestaurantsState extends Equatable {
 }
 
 class OnSuccessGetRestaurantsState extends GetRestaurantsState {
-  List<Restaurant> restaurants;
+  final List<Restaurant> restaurants;
 
   OnSuccessGetRestaurantsState({required this.restaurants});
 
@@ -16,7 +16,7 @@ class OnSuccessGetRestaurantsState extends GetRestaurantsState {
 }
 
 class OnErrorGetRestaurantsState extends GetRestaurantsState {
-  String message;
+  final String message;
 
   OnErrorGetRestaurantsState({required this.message});
 

@@ -1,4 +1,0 @@
-#Fri Sep 10 11:34:29 WIB 2021
-base.0=/Users/ichsana/AndroidStudioProjects/restaurant/build/app/intermediates/dex/debug/mergeDexDebug/classes.dex
-renamed.0=classes.dex
-path.0=classes.dex

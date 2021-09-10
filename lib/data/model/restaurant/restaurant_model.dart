@@ -52,6 +52,7 @@ class Menu {
 @JsonSerializable()
 class Food {
   String? name;
+
   Food({this.name});
 
   factory Food.fromJson(Map<String, dynamic> json) => _$FoodFromJson(json);
