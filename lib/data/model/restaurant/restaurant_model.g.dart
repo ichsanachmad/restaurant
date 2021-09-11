@@ -47,10 +47,10 @@ Map<String, dynamic> _$RestaurantToJson(Restaurant instance) =>
 Menu _$MenuFromJson(Map<String, dynamic> json) {
   return Menu(
     foods: (json['foods'] as List<dynamic>?)
-        ?.map((e) => Food.fromJson(e as Map<String, dynamic>))
+        ?.map((e) => FoodDrink.fromJson(e as Map<String, dynamic>))
         .toList(),
     drinks: (json['drinks'] as List<dynamic>?)
-        ?.map((e) => Drink.fromJson(e as Map<String, dynamic>))
+        ?.map((e) => FoodDrink.fromJson(e as Map<String, dynamic>))
         .toList(),
   );
 }
@@ -60,22 +60,12 @@ Map<String, dynamic> _$MenuToJson(Menu instance) => <String, dynamic>{
       'drinks': instance.drinks,
     };
 
-Food _$FoodFromJson(Map<String, dynamic> json) {
-  return Food(
+FoodDrink _$FoodDrinkFromJson(Map<String, dynamic> json) {
+  return FoodDrink(
     name: json['name'] as String?,
   );
 }
 
-Map<String, dynamic> _$FoodToJson(Food instance) => <String, dynamic>{
-      'name': instance.name,
-    };
-
-Drink _$DrinkFromJson(Map<String, dynamic> json) {
-  return Drink(
-    name: json['name'] as String?,
-  );
-}
-
-Map<String, dynamic> _$DrinkToJson(Drink instance) => <String, dynamic>{
+Map<String, dynamic> _$FoodDrinkToJson(FoodDrink instance) => <String, dynamic>{
       'name': instance.name,
     };

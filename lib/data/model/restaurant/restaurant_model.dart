@@ -40,8 +40,8 @@ class Restaurant {
 
 @JsonSerializable()
 class Menu {
-  List<Food>? foods;
-  List<Drink>? drinks;
+  List<FoodDrink>? foods;
+  List<FoodDrink>? drinks;
 
   Menu({this.foods, this.drinks});
 
@@ -50,21 +50,12 @@ class Menu {
 }
 
 @JsonSerializable()
-class Food {
+class FoodDrink {
   String? name;
 
-  Food({this.name});
+  FoodDrink({this.name});
 
-  factory Food.fromJson(Map<String, dynamic> json) => _$FoodFromJson(json);
-  Map<String, dynamic> toJson() => _$FoodToJson(this);
-}
-
-@JsonSerializable()
-class Drink {
-  String? name;
-
-  Drink({this.name});
-
-  factory Drink.fromJson(Map<String, dynamic> json) => _$DrinkFromJson(json);
-  Map<String, dynamic> toJson() => _$DrinkToJson(this);
+  factory FoodDrink.fromJson(Map<String, dynamic> json) =>
+      _$FoodDrinkFromJson(json);
+  Map<String, dynamic> toJson() => _$FoodDrinkToJson(this);
 }

@@ -27,6 +27,14 @@ class TextExtension {
     );
   }
 
+  static TextStyle smallStyle({required Color textColor}) {
+    return TextStyle(
+      fontFamily: FontUtil.POPPINS,
+      color: textColor,
+      fontSize: 12,
+    );
+  }
+
   static TextStyle h2Style({required Color textColor}) {
     return TextStyle(
         fontFamily: FontUtil.POPPINS,

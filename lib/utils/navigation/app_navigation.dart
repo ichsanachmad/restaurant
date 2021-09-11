@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:restaurant/data/model/restaurant/restaurant_model.dart';
 import 'package:restaurant/ui/ui.dart';
 
 class AppNavigator {
@@ -12,7 +13,8 @@ class AppNavigator {
         _builder = (context) => HomeScreen();
         break;
       case DetailRestaurant.ROUTE:
-        _builder = (context) => DetailRestaurant();
+        Restaurant restaurant = settings.arguments as Restaurant;
+        _builder = (context) => DetailRestaurant(restaurant: restaurant);
         break;
       default:
         throw 'Illegal Routes ${settings.name}';
