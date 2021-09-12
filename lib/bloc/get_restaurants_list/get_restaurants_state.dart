@@ -6,6 +6,13 @@ class GetRestaurantsState extends Equatable {
   List<Object?> get props => [];
 }
 
+class GetRestaurantsInitState extends GetRestaurantsState {}
+
+class OnLoadingGetRestaurantsState extends GetRestaurantsState {
+  @override
+  List<Object?> get props => [];
+}
+
 class OnSuccessGetRestaurantsState extends GetRestaurantsState {
   final List<Restaurant> restaurants;
 

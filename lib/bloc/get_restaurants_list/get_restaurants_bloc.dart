@@ -5,7 +5,7 @@ import 'package:restaurant/domain/restaurant_domain.dart';
 
 class GetRestaurantsBloc
     extends Bloc<GetRestaurantsEvent, GetRestaurantsState> {
-  GetRestaurantsBloc() : super(GetRestaurantsState());
+  GetRestaurantsBloc() : super(GetRestaurantsInitState());
 
   final RestaurantDomain _restaurantDomain = RestaurantDomain();
 
@@ -15,14 +15,39 @@ class GetRestaurantsBloc
     if (event is OnRequestGetRestaurantsEvent) {
       yield* _onGetRestaurants();
     }
+
+    if (event is OnSearchRestaurantsEvent) {
+      yield* _onSearchRestaurants(query: event.query);
+    }
   }
 
   Stream<GetRestaurantsState> _onGetRestaurants() async* {
+    yield OnLoadingGetRestaurantsState();
     try {
       var res = await _restaurantDomain.getRestaurants();
       yield OnSuccessGetRestaurantsState(restaurants: res.restaurants ?? []);
     } catch (e) {
       yield OnErrorGetRestaurantsState(message: 'Error Fetch');
     }
+  }
+
+  Stream<GetRestaurantsState> _onSearchRestaurants(
+      {required String query}) async* {
+    yield OnLoadingGetRestaurantsState();
+    try {
+      var res = await _restaurantDomain.getRestaurants();
+      var filteredResult = (res.restaurants ?? [])
+          .where((e) => _equalsIgnoreCase(query, e.name ?? ""))
+          .toList();
+
+      yield OnSuccessGetRestaurantsState(restaurants: filteredResult);
+    } catch (e) {
+      yield OnErrorGetRestaurantsState(message: 'Error Fetch');
+    }
+  }
+
+  bool _equalsIgnoreCase(String a, String b) {
+    return a.toLowerCase() == b.toLowerCase() ||
+        b.toLowerCase().contains(a.toLowerCase());
   }
 }

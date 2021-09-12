@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
     AppNavigator _appNavigator = AppNavigator();
     return MaterialApp(
       title: 'Restaurant Demo',
-      theme: ThemeData(primaryColor: Colors.black),
+      theme: ThemeData(primarySwatch: Colors.grey),
       initialRoute: SplashScreen.ROUTE,
       onGenerateRoute: _appNavigator.onGenerateRoute,
     );

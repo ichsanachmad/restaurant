@@ -1,37 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:restaurant/bloc/bloc.dart';
+import 'package:restaurant/ui/search/components.dart';
 import 'package:restaurant/ui/ui.dart';
 import 'package:restaurant/ui/home/components.dart';
 import 'package:restaurant/ui/widgets/widget.dart';
 
-class HomeScreen extends StatelessWidget {
-  static const ROUTE = '/home';
+class SearchScreen extends StatelessWidget {
+  static const ROUTE = "/searchRestaurants";
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => GetRestaurantsBloc(),
-      child: _HomeScreenContainer(),
+      child: _SearchScreenContainer(),
     );
   }
 }
 
-class _HomeScreenContainer extends StatefulWidget {
+class _SearchScreenContainer extends StatefulWidget {
   @override
-  __HomeScreenContainerState createState() => __HomeScreenContainerState();
+  __SearchScreenContainerState createState() => __SearchScreenContainerState();
 }
 
-class __HomeScreenContainerState extends State<_HomeScreenContainer> {
-  @override
-  void initState() {
-    context.read<GetRestaurantsBloc>().add(OnRequestGetRestaurantsEvent());
-    super.initState();
-  }
-
+class __SearchScreenContainerState extends State<_SearchScreenContainer> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(),
       body: SafeArea(
         child: Stack(
           children: [
@@ -39,31 +35,43 @@ class __HomeScreenContainerState extends State<_HomeScreenContainer> {
             ListView(
               children: [
                 Container(
-                  alignment: Alignment.centerRight,
-                  margin: EdgeInsets.only(top: 56, right: 48),
-                  child: CustomIconButton(
-                    icon: Icon(
-                      Icons.search,
-                      size: 30,
-                      color: Colors.grey,
-                    ),
-                    onPressed: () {
-                      Navigator.pushNamed(context, SearchScreen.ROUTE);
-                    },
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.only(left: 16, top: 16),
+                  margin: EdgeInsets.only(left: 16, top: 64),
                   child: Text(
-                    'Restaurant App',
+                    'Search Restaurant',
                     style: TextExtension.titleStyle(textColor: Colors.black),
                   ),
                 ),
                 Container(
                   margin: EdgeInsets.only(left: 16, right: 16, top: 2),
                   child: Text(
-                    'Here some recommended restaurants for you',
+                    'Search your favorite restaurant',
                     style: TextExtension.h2Style(textColor: Colors.grey),
+                  ),
+                ),
+                SizedBox(height: 20),
+                Container(
+                  margin: EdgeInsets.only(left: 16, right: 16, top: 2),
+                  child: TextField(
+                    keyboardType: TextInputType.name,
+                    decoration: InputDecoration(
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black),
+                      ),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey),
+                      ),
+                      hintText: 'Name',
+                      hintStyle: TextExtension.normalStyle(
+                        textColor: Colors.grey,
+                      ),
+                    ),
+                    onSubmitted: (value) {
+                      context.read<GetRestaurantsBloc>().add(
+                            OnSearchRestaurantsEvent(
+                              query: value,
+                            ),
+                          );
+                    },
                   ),
                 ),
                 SizedBox(height: 20),
@@ -71,15 +79,22 @@ class __HomeScreenContainerState extends State<_HomeScreenContainer> {
                   listener: (context, state) {
                     if (state is OnErrorGetRestaurantsState) {
                       showSnackBar(context,
-                          message: 'Connection error');
+                          message: 'Terjadi kesalahan koneksi');
                     }
                   },
                   builder: (context, state) {
+                    if (state is GetRestaurantsInitState) {
+                      return Container();
+                    }
+
                     if (state is OnLoadingGetRestaurantsState) {
                       return LoadingLoadRestaurantsData();
                     }
 
                     if (state is OnSuccessGetRestaurantsState) {
+                      if (state.restaurants.isEmpty)
+                        return SearchNotFoundRestaurantsData();
+
                       return ListView.builder(
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),

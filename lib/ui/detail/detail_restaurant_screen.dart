@@ -3,12 +3,12 @@ import 'package:restaurant/data/model/restaurant/restaurant_model.dart';
 import 'package:restaurant/ui/detail/components.dart';
 import 'package:restaurant/ui/widgets/widget.dart';
 
-class DetailRestaurant extends StatelessWidget {
+class DetailRestaurantScreen extends StatelessWidget {
   static const ROUTE = '/detailRestaurant';
 
   final Restaurant restaurant;
 
-  DetailRestaurant({required this.restaurant});
+  DetailRestaurantScreen({required this.restaurant});
 
   @override
   Widget build(BuildContext context) {

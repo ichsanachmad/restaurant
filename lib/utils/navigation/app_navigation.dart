@@ -12,9 +12,12 @@ class AppNavigator {
       case HomeScreen.ROUTE:
         _builder = (context) => HomeScreen();
         break;
-      case DetailRestaurant.ROUTE:
+      case DetailRestaurantScreen.ROUTE:
         Restaurant restaurant = settings.arguments as Restaurant;
-        _builder = (context) => DetailRestaurant(restaurant: restaurant);
+        _builder = (context) => DetailRestaurantScreen(restaurant: restaurant);
+        break;
+      case SearchScreen.ROUTE:
+        _builder = (context) => SearchScreen();
         break;
       default:
         throw 'Illegal Routes ${settings.name}';
