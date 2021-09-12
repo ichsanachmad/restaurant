@@ -27,7 +27,11 @@ class __SearchScreenContainerState extends State<_SearchScreenContainer> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        elevation: 0.0,
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: Colors.black),
+      ),
       body: SafeArea(
         child: Stack(
           children: [
