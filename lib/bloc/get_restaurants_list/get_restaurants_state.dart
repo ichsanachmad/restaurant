@@ -22,6 +22,15 @@ class OnSuccessGetRestaurantsState extends GetRestaurantsState {
   List<Object?> get props => [this.restaurants];
 }
 
+class OnSuccessCheckRestaurantLocalIsExistState extends GetRestaurantsState {
+  final bool isExist;
+
+  OnSuccessCheckRestaurantLocalIsExistState({required this.isExist});
+
+  @override
+  List<Object?> get props => [this.isExist];
+}
+
 class OnErrorGetRestaurantsState extends GetRestaurantsState {
   final String message;
 

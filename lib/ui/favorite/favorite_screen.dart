@@ -5,33 +5,39 @@ import 'package:restaurant/ui/ui.dart';
 import 'package:restaurant/ui/home/components.dart';
 import 'package:restaurant/ui/widgets/widget.dart';
 
-class HomeScreen extends StatelessWidget {
-  static const ROUTE = '/home';
+class FavoriteScreen extends StatelessWidget {
+  static const ROUTE = '/favorite';
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => GetRestaurantsBloc(),
-      child: _HomeScreenContainer(),
+      child: _FavoriteScreenContainer(),
     );
   }
 }
 
-class _HomeScreenContainer extends StatefulWidget {
+class _FavoriteScreenContainer extends StatefulWidget {
   @override
-  __HomeScreenContainerState createState() => __HomeScreenContainerState();
+  __FavoriteScreenContainerState createState() =>
+      __FavoriteScreenContainerState();
 }
 
-class __HomeScreenContainerState extends State<_HomeScreenContainer> {
+class __FavoriteScreenContainerState extends State<_FavoriteScreenContainer> {
   @override
   void initState() {
-    context.read<GetRestaurantsBloc>().add(OnRequestGetRestaurantsEvent());
+    context.read<GetRestaurantsBloc>().add(OnGetRestaurantsLocalEvent());
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        elevation: 0.0,
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: Colors.black),
+      ),
       body: SafeArea(
         child: Stack(
           children: [
@@ -39,45 +45,16 @@ class __HomeScreenContainerState extends State<_HomeScreenContainer> {
             ListView(
               children: [
                 Container(
-                  margin: EdgeInsets.only(top: 56, right: 16),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      CustomIconButton(
-                        icon: Icon(
-                          Icons.favorite,
-                          size: 30,
-                          color: Colors.grey,
-                        ),
-                        onPressed: () {
-                          Navigator.pushNamed(context, FavoriteScreen.ROUTE);
-                        },
-                      ),
-                      SizedBox(width: 16),
-                      CustomIconButton(
-                        icon: Icon(
-                          Icons.search,
-                          size: 30,
-                          color: Colors.grey,
-                        ),
-                        onPressed: () {
-                          Navigator.pushNamed(context, SearchScreen.ROUTE);
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.only(left: 16, top: 16),
+                  margin: EdgeInsets.only(left: 16, top: 64),
                   child: Text(
-                    'Restaurant App',
+                    'Favorite Restaurant',
                     style: TextExtension.titleStyle(textColor: Colors.black),
                   ),
                 ),
                 Container(
                   margin: EdgeInsets.only(left: 16, right: 16, top: 2),
                   child: Text(
-                    'Here some recommended restaurants for you',
+                    'Here some favorite restaurants that you like',
                     style: TextExtension.h2Style(textColor: Colors.grey),
                   ),
                 ),
@@ -85,7 +62,7 @@ class __HomeScreenContainerState extends State<_HomeScreenContainer> {
                 BlocConsumer<GetRestaurantsBloc, GetRestaurantsState>(
                   listener: (context, state) {
                     if (state is OnErrorGetRestaurantsState) {
-                      showSnackBar(context, message: 'Connection error');
+                      showSnackBar(context, message: 'Error');
                     }
                   },
                   builder: (context, state) {

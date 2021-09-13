@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:json_annotation/json_annotation.dart';
+import 'package:restaurant/data/entity/restaurant_entity/restaurant_entity.dart';
 
 part 'restaurant_model.g.dart';
 
@@ -35,7 +38,17 @@ class Restaurant {
 
   factory Restaurant.fromJson(Map<String, dynamic> json) =>
       _$RestaurantFromJson(json);
+
+  factory Restaurant.fromRestaurantEntityJson(
+          Map<String, dynamic> restaurantEntityJson) =>
+      Restaurant.fromJson(restaurantEntityJson);
+
   Map<String, dynamic> toJson() => _$RestaurantToJson(this);
+
+  RestaurantEntity toRestaurantEntity() => RestaurantEntity(
+        this.id ?? "",
+        jsonEncode(this),
+      );
 }
 
 @JsonSerializable()

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:restaurant/bloc/bloc.dart';
 import 'package:restaurant/data/model/restaurant/restaurant_model.dart';
 import 'package:restaurant/ui/detail/components.dart';
 import 'package:restaurant/ui/widgets/widget.dart';
@@ -9,6 +11,41 @@ class DetailRestaurantScreen extends StatelessWidget {
   final Restaurant restaurant;
 
   DetailRestaurantScreen({required this.restaurant});
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<GetRestaurantsBloc>(
+            create: (context) => GetRestaurantsBloc()),
+        BlocProvider<InsertRestaurantLocalBloc>(
+            create: (context) => InsertRestaurantLocalBloc()),
+        BlocProvider<DeleteRestaurantLocalBloc>(
+            create: (context) => DeleteRestaurantLocalBloc()),
+      ],
+      child: DetailRestaurantContainer(restaurant: this.restaurant),
+    );
+  }
+}
+
+class DetailRestaurantContainer extends StatefulWidget {
+  final Restaurant restaurant;
+
+  DetailRestaurantContainer({required this.restaurant});
+
+  @override
+  State<DetailRestaurantContainer> createState() =>
+      _DetailRestaurantContainerState();
+}
+
+class _DetailRestaurantContainerState extends State<DetailRestaurantContainer> {
+  var _isExist = false;
+  @override
+  void initState() {
+    context.read<GetRestaurantsBloc>().add(
+        OnCheckRestaurantLocalIsExistEvent(id: widget.restaurant.id ?? ""));
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +60,7 @@ class DetailRestaurantScreen extends StatelessWidget {
               flexibleSpace: FlexibleSpaceBar(
                 centerTitle: true,
                 background: Image.network(
-                  restaurant.pictureId ?? "",
+                  widget.restaurant.pictureId ?? "",
                   fit: BoxFit.cover,
                 ),
               ),
@@ -36,7 +73,7 @@ class DetailRestaurantScreen extends StatelessWidget {
             Container(
               margin: EdgeInsets.only(left: 16, right: 16),
               child: Text(
-                restaurant.name ?? "",
+                widget.restaurant.name ?? "",
                 style: TextExtension.h1Style(
                   textColor: Colors.black,
                 ),
@@ -55,7 +92,7 @@ class DetailRestaurantScreen extends StatelessWidget {
                   ),
                   SizedBox(width: 4),
                   Text(
-                    restaurant.city ?? "",
+                    widget.restaurant.city ?? "",
                     style: TextExtension.normalStyle(textColor: Colors.grey),
                   ),
                 ],
@@ -75,7 +112,7 @@ class DetailRestaurantScreen extends StatelessWidget {
             Container(
               margin: EdgeInsets.only(left: 16, right: 16),
               child: Text(
-                restaurant.description ?? "",
+                widget.restaurant.description ?? "",
                 style: TextExtension.normalStyle(
                   textColor: Colors.black,
                 ),
@@ -96,12 +133,12 @@ class DetailRestaurantScreen extends StatelessWidget {
               height: 120,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
-                itemCount: restaurant.menus?.foods?.length ?? 0,
+                itemCount: widget.restaurant.menus?.foods?.length ?? 0,
                 itemBuilder: (context, position) {
-                  var food = restaurant.menus?.foods?[position].name;
+                  var food = widget.restaurant.menus?.foods?[position].name;
                   return FoodDrinkListItem(
                     isFirst: position == 0,
-                    isLast: position == restaurant.menus?.foods?.length,
+                    isLast: position == widget.restaurant.menus?.foods?.length,
                     name: food ?? "",
                   );
                 },
@@ -122,13 +159,13 @@ class DetailRestaurantScreen extends StatelessWidget {
               height: 120,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
-                itemCount: restaurant.menus?.drinks?.length ?? 0,
+                itemCount: widget.restaurant.menus?.drinks?.length ?? 0,
                 itemBuilder: (context, position) {
-                  var drink = restaurant.menus?.drinks?[position].name;
+                  var drink = widget.restaurant.menus?.drinks?[position].name;
                   return FoodDrinkListItem(
                     isFirst: position == 0,
-                    isLast:
-                        position == (restaurant.menus?.drinks?.length ?? 1) - 1,
+                    isLast: position ==
+                        (widget.restaurant.menus?.drinks?.length ?? 1) - 1,
                     name: drink ?? "",
                   );
                 },
@@ -136,6 +173,34 @@ class DetailRestaurantScreen extends StatelessWidget {
             ),
           ],
         ),
+      ),
+      floatingActionButton:
+          BlocBuilder<GetRestaurantsBloc, GetRestaurantsState>(
+        builder: (context, state) {
+          if (state is OnSuccessCheckRestaurantLocalIsExistState) {
+            _isExist = state.isExist;
+          }
+          return FloatingActionButton(
+            child: Icon(_isExist ? Icons.favorite : Icons.favorite_border),
+            onPressed: () {
+              if (_isExist) {
+                context.read<DeleteRestaurantLocalBloc>().add(
+                    DeleteRestaurantLocalEvent(id: widget.restaurant.id ?? ""));
+                showSnackBar(context, message: "Deleted from Favorite");
+              } else {
+                context.read<InsertRestaurantLocalBloc>().add(
+                    InsertRestaurantLocalEvent(restaurant: widget.restaurant));
+                showSnackBar(context, message: "Added to Favorite");
+              }
+
+              context.read<GetRestaurantsBloc>().add(
+                  OnCheckRestaurantLocalIsExistEvent(
+                      id: widget.restaurant.id ?? ""));
+
+              setState(() => _isExist = !_isExist);
+            },
+          );
+        },
       ),
     );
   }

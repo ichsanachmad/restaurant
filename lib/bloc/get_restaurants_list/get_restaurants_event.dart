@@ -18,3 +18,17 @@ class OnSearchRestaurantsEvent extends GetRestaurantsEvent {
   @override
   List<Object?> get props => [this.query];
 }
+
+class OnGetRestaurantsLocalEvent extends GetRestaurantsEvent {
+  @override
+  List<Object?> get props => [];
+}
+
+class OnCheckRestaurantLocalIsExistEvent extends GetRestaurantsEvent {
+   final String id;
+
+  OnCheckRestaurantLocalIsExistEvent({required this.id});
+
+  @override
+  List<Object?> get props => [this.id];
+}

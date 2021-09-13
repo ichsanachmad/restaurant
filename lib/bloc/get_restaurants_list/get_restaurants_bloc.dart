@@ -19,6 +19,14 @@ class GetRestaurantsBloc
     if (event is OnSearchRestaurantsEvent) {
       yield* _onSearchRestaurants(query: event.query);
     }
+
+    if (event is OnGetRestaurantsLocalEvent) {
+      yield* _onGetRestaurantsLocal();
+    }
+
+    if (event is OnCheckRestaurantLocalIsExistEvent) {
+      yield* _onCheckLocal(event.id);
+    }
   }
 
   Stream<GetRestaurantsState> _onGetRestaurants() async* {
@@ -41,6 +49,26 @@ class GetRestaurantsBloc
           .toList();
 
       yield OnSuccessGetRestaurantsState(restaurants: filteredResult);
+    } catch (e) {
+      yield OnErrorGetRestaurantsState(message: 'Error Fetch');
+    }
+  }
+
+  Stream<GetRestaurantsState> _onGetRestaurantsLocal() async* {
+    yield OnLoadingGetRestaurantsState();
+    try {
+      var res = await _restaurantDomain.getAllRestaurantsLocal();
+      yield OnSuccessGetRestaurantsState(restaurants: res);
+    } catch (e) {
+      yield OnErrorGetRestaurantsState(message: 'Error Fetch');
+    }
+  }
+
+  Stream<GetRestaurantsState> _onCheckLocal(String id) async* {
+    yield OnLoadingGetRestaurantsState();
+    try {
+      var res = await _restaurantDomain.isRestaurantExist(id);
+      yield OnSuccessCheckRestaurantLocalIsExistState(isExist: res);
     } catch (e) {
       yield OnErrorGetRestaurantsState(message: 'Error Fetch');
     }
