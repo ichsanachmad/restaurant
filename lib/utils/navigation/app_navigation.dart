@@ -22,6 +22,9 @@ class AppNavigator {
       case FavoriteScreen.ROUTE:
         _builder = (context) => FavoriteScreen();
         break;
+      case SettingScreen.ROUTE:
+        _builder = (context) => SettingScreen();
+        break;
       default:
         throw 'Illegal Routes ${settings.name}';
     }

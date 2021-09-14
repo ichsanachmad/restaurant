@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:restaurant/bloc/bloc.dart';
+import 'package:restaurant/ui/setting/setting_screen.dart';
 import 'package:restaurant/ui/ui.dart';
 import 'package:restaurant/ui/home/components.dart';
 import 'package:restaurant/ui/widgets/widget.dart';
+import 'package:restaurant/utils/utils.dart';
 
 class HomeScreen extends StatelessWidget {
   static const ROUTE = '/home';
@@ -23,10 +25,20 @@ class _HomeScreenContainer extends StatefulWidget {
 }
 
 class __HomeScreenContainerState extends State<_HomeScreenContainer> {
+  final NotificationHelper _helper = NotificationHelper();
+
   @override
   void initState() {
     context.read<GetRestaurantsBloc>().add(OnRequestGetRestaurantsEvent());
     super.initState();
+    _helper.configureSelectNotificationSubject(SettingScreen.ROUTE);
+  }
+
+  @override
+  void dispose() {
+
+    selectNotificationSubject.close();
+    super.dispose();
   }
 
   @override
@@ -62,6 +74,17 @@ class __HomeScreenContainerState extends State<_HomeScreenContainer> {
                         ),
                         onPressed: () {
                           Navigator.pushNamed(context, SearchScreen.ROUTE);
+                        },
+                      ),
+                      SizedBox(width: 24),
+                      CustomIconButton(
+                        icon: Icon(
+                          Icons.settings,
+                          size: 30,
+                          color: Colors.grey,
+                        ),
+                        onPressed: () {
+                          Navigator.pushNamed(context, SettingScreen.ROUTE);
                         },
                       ),
                     ],
